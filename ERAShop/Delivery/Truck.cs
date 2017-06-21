@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ERAShop {
-   public class Truck : DeliveryService {
+   public class Truck : DeliveryService, IGeneralDeliveryMethod {
 
         public static int capacity = 100;
         public static int maxDistance = 500;

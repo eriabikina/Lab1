@@ -10,6 +10,7 @@ namespace ERAShop {
 
         public int Distance { get; set; }
         public int Quantity { get; set; }
+
         public int CostPerKg {
             get {
                 int cost;
@@ -29,33 +30,25 @@ namespace ERAShop {
             }
         }
 
-        public int Tax {
-            get {
-                int tax;
-
-                if (producer == ProductDealers.Ikea) {
-                    tax = 10;
-                } else if (producer == ProductDealers.Zara) {
-                    tax = 5;
-                } else if (producer == ProductDealers.Nestle) {
-                    tax = 2;
-                } else if (producer == ProductDealers.Nike) {
-                    tax = 20;
-                } else {
-                    tax = 0;
-                }
-                return tax;
-            }
-        }
-
         public int Cost {
 
             get {
                 int cost;
-                int tax = Tax;
-                int distance = Distance;
-                cost = Tax * Distance + Quantity * CostPerKg;
-
+                if (producer == ProductDealers.Ikea) {
+                    ProductIkea ikea = new ProductIkea ();
+                    cost = ikea.Cost (Distance,Quantity,CostPerKg);
+                } else if (producer == ProductDealers.Zara) {
+                    ProductZara zara = new ProductZara ();
+                    cost = zara.Cost (Distance, Quantity, CostPerKg);
+                } else if (producer == ProductDealers.Nestle) {
+                    ProductNestle nestle = new ProductNestle ();
+                    cost = nestle.Cost (Distance, Quantity, CostPerKg);
+                } else if (producer == ProductDealers.Nike) {
+                    ProductNike nike = new ProductNike ();
+                    cost = nike.Cost (Distance, Quantity, CostPerKg);
+                } else {
+                    cost = 0;
+                }
                 return cost;
             }
         }
@@ -77,7 +70,6 @@ namespace ERAShop {
                 result = false;
             }
             return result;
-
         }
 
         public bool MaxDistance () {
@@ -97,22 +89,21 @@ namespace ERAShop {
                 result = false;
             }
             return result;
-
         }
 
-        public bool ValidDestination (string destination) {
+        public bool ValidDestination (Routes destination) {
 
             bool result;
             if (delivery == Deliveries.Cargo) {
-                result = Distance <= CargoShip.maxDistance;
+                result = destination== Routes.Istanbul;
             } else if (delivery == Deliveries.Plane) {
-                result = Distance <= Plane.maxDistance;
+                result = true;
             } else if (delivery == Deliveries.Truck) {
-                result = Distance <= Truck.maxDistance;
+                result = destination != Routes.Istanbul;
             } else if (delivery == Deliveries.Drone) {
-                result = Distance <= Drone.maxDistance;
+                result = destination == Routes.Chisinau;
             } else if (delivery == Deliveries.SantaClauseSledge) {
-                result = Distance <= Truck.maxDistance;
+                result = true;
             } else {
                 result = false;
             }

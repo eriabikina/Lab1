@@ -35,7 +35,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Order.cs" />
+    <Compile Include="Users\Administrator.cs" />
     <Compile Include="Delivery\SantaClauseSledge.cs" />
     <Compile Include="Delivery\Drone.cs" />
     <Compile Include="Delivery\Truck.cs" />
@@ -51,17 +55,74 @@
     <Compile Include="Delivery\CargoShip.cs" />
     <Compile Include="Delivery\DeliveryService.cs" />
     <Compile Include="Employee.cs" />
+    <Compile Include="Forms\CollectOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectOrder.Designer.cs">
+      <DependentUpon>CollectOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WarehouseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WarehouseForm.Designer.cs">
+      <DependentUpon>WarehouseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InputEmployeeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputEmployeeForm.Designer.cs">
+      <DependentUpon>InputEmployeeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MenuForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MenuForm.Designer.cs">
+      <DependentUpon>MenuForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OrderEntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OrderEntryForm.Designer.cs">
+      <DependentUpon>OrderEntryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IGeneralDeliveryMethod.cs" />
+    <Compile Include="IGeneralProductDealer.cs" />
+    <Compile Include="IGeneralUser.cs" />
+    <Compile Include="Users\Partner.cs" />
+    <Compile Include="ProductDealers\ProductNike.cs" />
+    <Compile Include="ProductDealers\ProductIkea.cs" />
     <Compile Include="OrderCalc.cs" />
+    <Compile Include="ProductDealers\ProductNestle.cs" />
+    <Compile Include="ProductDealers\ProductZara.cs" />
     <Compile Include="ProductDelivery.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="..\..\..\..\..\Source\Repos\Task_1\StoreWarehouse.cs">
       <Link>StoreWarehouse.cs</Link>
     </Compile>
+    <Compile Include="Users\WarehouseAdministrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\CollectOrder.resx">
+      <DependentUpon>CollectOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InputEmployeeForm.resx">
+      <DependentUpon>InputEmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MenuForm.resx">
+      <DependentUpon>MenuForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OrderEntryForm.resx">
+      <DependentUpon>OrderEntryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WarehouseForm.resx">
+      <DependentUpon>WarehouseForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

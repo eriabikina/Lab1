@@ -34,6 +34,7 @@ namespace ERAShop {
 
     public abstract class ProductDelivery {
 
+        public int Id;
         public string ProductName;
         public Routes route;
         public Types type;

@@ -9,20 +9,20 @@ namespace ERAShop {
 
         public static string departure = "Odessa";
         
-        public static int Distance ( string destination) {
+        public static int Distance ( Routes destination) {
             int distance = 0;
             switch (destination) {
 
-                case ("Paris"):
+                case (Routes.Paris):
                     distance = 2669;
                     break;
-                case ("Chisinau"):
+                case (Routes.Chisinau):
                     distance = 173;
                     break;
-                case ("Bucharest"):
+                case (Routes.Bucharest):
                     distance = 608;
                     break;
-                case ("Istanbul"):
+                case (Routes.Istanbul):
                     distance = 829;
                     break;
                 default:
