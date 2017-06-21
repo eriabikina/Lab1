@@ -82,6 +82,7 @@ namespace ERAShop {
                             stream.WriteLine (storage.Section);
                             stream.WriteLine (fullName.Text);
                             stream.WriteLine (cost.Text);
+                            stream.WriteLine (deliveryMethod.Text);
                         }
 
                         File.Move (filePathFrom, filePathTo);

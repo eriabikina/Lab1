@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,8 +14,6 @@ namespace ERAShop {
     public partial class WarehouseForm : Form {
 
         List<Order> order = new List<Order> { };
-
-
 
         public WarehouseForm () {
             InitializeComponent ();
@@ -45,7 +44,10 @@ namespace ERAShop {
                 {
                     string[] input = File.ReadAllLines (path);
 
-                    order.Add (new Order { OrderId = int.Parse (input[0]), ProductName = input[1], Department = input[6], Section = int.Parse (input[7]) });
+                    order.Add (new Order {
+                        OrderId = int.Parse (input[0]), ProductName = input[1], Producer = input[2], Department = input[6], Section = int.Parse (input[7]),
+                        FullName = input[8], Cost = int.Parse (input[9]), DeliveryMethod = input[10]
+                    });
 
                     switch (input[6]) {
                         case "Whale":
@@ -85,37 +87,84 @@ namespace ERAShop {
             }
         }
 
-        private void srchButton_Click (object sender, EventArgs e) {
+        private bool Search (Order order) {
 
-            List<Order> foundDepOrder = new List<Order> { };
-            List<Order> foundSecOrder = new List<Order> { };
-
-            for (int i = 0; i < order.Count; i++) {
-               /* if (comboBox2.SelectedItem != null && comboBox3.SelectedItem != null) {
-                    if (order[i].Department == comboBox2.Text && order[i].Section == int.Parse (comboBox3.Text)) {
-                        foundDepOrder.Add (new Order { OrderId = order[i].OrderId, ProductName = order[i].ProductName, Department = order[i].Department, Section = order[i].Section });
-                    }
-
-                } else*/
-                   if (comboBox2.SelectedItem != null) {
-                    if (order[i].Department == comboBox2.Text) {
-                        foundDepOrder.Add (new Order { OrderId = order[i].OrderId, ProductName = order[i].ProductName, Department = order[i].Department, Section = order[i].Section });
-                    }
-
-                if (comboBox3.SelectedItem != null) {
-                    if (order[i].Section == int.Parse (comboBox3.Text)) {
-                        foundSecOrder.Add (new Order { OrderId = order[i].OrderId, ProductName = order[i].ProductName, Department = order[i].Department, Section = order[i].Section });
-                    }
+            if (comboBox2.Text != "" && comboBox3.Text != "") {
+                if (order.Department == comboBox2.Text && order.Section == int.Parse (comboBox3.Text)) {
+                    return true;
+                } else {
+                    return false;
                 }
+
+            } else if (comboBox2.Text != "") {
+                if (order.Department == comboBox2.Text) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } else if (comboBox3.Text != "") {
+                if (order.Section == int.Parse (comboBox3.Text)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
-    
 
-            for (int i = 0; i<foundDepOrder.Count; i++) {
-                richTextBox1.Text += "Order #" + foundDepOrder[i].OrderId.ToString () + ": " + foundDepOrder[i].ProductName + Environment.NewLine;
+        private bool Report (Order order) {
+
+            if (order.OrderId == int.Parse (textBox1.Text)) {
+                return true;
+            } else {
+                return false;
             }
+        }
 
+        private void srchButton_Click (object sender, EventArgs e) {
 
+            richTextBox1.Clear ();
+
+            List<Order> results = order.FindAll (Search);
+
+            if (results.Count != 0) {
+
+                results.Sort ((x, y) => x.Section.CompareTo (y.Section));
+
+                foreach (Order result in results) {
+                    richTextBox1.Text += $"\nDep.:{result.Department};\t Sect.:{result.Section};\t Order Id:{result.OrderId}";
+                }
+
+            } else {
+                richTextBox1.Text += ("\nNo orders found.");
+            }
+        }
+
+        private void button1_Click (object sender, EventArgs e) {
+            richTextBox1.Clear ();
+
+            string message;
+            SpeechSynthesizer synth = new SpeechSynthesizer ();
+
+            Order result = order.FindLast (Report);
+
+            if (result != null) {
+                Employee employee = new Employee ();
+
+                employee.deliveryMethod = (Deliveries)(Enum.Parse (typeof (Deliveries), result.DeliveryMethod));
+                message = $"Hi! My name is {result.FullName}\n";
+                message += $"{employee.DeliveryMethod}\n";
+
+                message += $"Today's pick up location is {result.Department} department: section #{result.Section}\n";
+                message += $"Current order is for {result.Producer} and costs {result.Cost:C} \n";
+
+            } else {
+                message = "No order found";
+            }
+            richTextBox1.Text = message;
+            synth.Speak (message);
         }
     }
 
