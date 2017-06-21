@@ -14,6 +14,7 @@ namespace ERAShop {
     public partial class WarehouseForm : Form {
 
         List<Order> order = new List<Order> { };
+        Queue<Order> conveyor = new Queue<Order> { };
 
         public WarehouseForm () {
             InitializeComponent ();
@@ -83,11 +84,25 @@ namespace ERAShop {
                             this.dataGridView5.Rows[e].Cells[int.Parse (input[7]) - 1].Value = "Order #" + input[0] + ": " + input[1] + " by " + input[8];
                             break;
                     }
+
+                    string conveyorPath = ConveyorFilePath ();
+                    richTextBox2.Text = File.ReadAllText (conveyorPath);
+
                 }
             }
         }
 
-        private bool Search (Order order) {
+        private static string ConveyorFilePath () {
+            Repository repository = new Repository ();
+            string conveyorPath = repository.BuildPath ("/Conveyor", "conveyor");
+            if (!File.Exists (conveyorPath)) {
+                File.Create (conveyorPath);
+            }
+
+            return conveyorPath;
+        }
+
+        private bool SearchOrdersByDepSec (Order order) {
 
             if (comboBox2.Text != "" && comboBox3.Text != "") {
                 if (order.Department == comboBox2.Text && order.Section == int.Parse (comboBox3.Text)) {
@@ -114,41 +129,42 @@ namespace ERAShop {
             }
         }
 
-        private bool Report (Order order) {
-
-            if (order.OrderId == int.Parse (textBox1.Text)) {
-                return true;
+        private bool SearchForOrder (Order order) {
+            if (textBox1.Text != "") {
+                if (order.OrderId == int.Parse (textBox1.Text)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
         }
 
-        private void srchButton_Click (object sender, EventArgs e) {
-
+        private void SearchOrdersByDepartmentSection () {
             richTextBox1.Clear ();
 
-            List<Order> results = order.FindAll (Search);
+            List<Order> results = order.FindAll (SearchOrdersByDepSec);
 
             if (results.Count != 0) {
 
                 results.Sort ((x, y) => x.Section.CompareTo (y.Section));
 
                 foreach (Order result in results) {
-                    richTextBox1.Text += $"\nDep.:{result.Department};\t Sect.:{result.Section};\t Order Id:{result.OrderId}";
+                    richTextBox1.Text += $"\nDep.:{result.Department};\tSect.:{result.Section};\tOrder Id:{result.OrderId}";
                 }
 
             } else {
-                richTextBox1.Text += ("\nNo orders found.");
+                richTextBox1.Text += ("No orders found.");
             }
         }
 
-        private void button1_Click (object sender, EventArgs e) {
+        private void GenerateReportForOrder () {
             richTextBox1.Clear ();
 
             string message;
-            SpeechSynthesizer synth = new SpeechSynthesizer ();
 
-            Order result = order.FindLast (Report);
+            Order result = order.FindLast (SearchForOrder);
 
             if (result != null) {
                 Employee employee = new Employee ();
@@ -164,8 +180,44 @@ namespace ERAShop {
                 message = "No order found";
             }
             richTextBox1.Text = message;
-            synth.Speak (message);
         }
+
+        private void PushOrderToConveyor () {
+            richTextBox1.Clear ();
+
+
+                Order result = order.FindLast (SearchForOrder);
+
+                if (result != null) {
+
+                    conveyor.Enqueue (new Order { OrderId = result.OrderId });
+
+                    string path = ConveyorFilePath ();
+                    richTextBox1.Text = $"{conveyor.Count} order(s) pushed to conveyor";
+
+                    var fifo = conveyor.Dequeue ();
+                    richTextBox2.Text += fifo.OrderId.ToString () + Environment.NewLine;
+
+                    using (StreamWriter stream = File.AppendText (path)) {
+                        stream.WriteLine (fifo.OrderId.ToString ());
+                    }
+
+                } else {
+                    richTextBox1.Text = "No order found";
+                }
+        }
+
+        private void srchButton_Click (object sender, EventArgs e) {
+            SearchOrdersByDepartmentSection ();
+        }
+
+        private void reportBbutton_Click (object sender, EventArgs e) {
+            GenerateReportForOrder ();
+        }
+        private void pushButton_Click (object sender, EventArgs e) {
+            PushOrderToConveyor ();
+        }
+
     }
 
 }
