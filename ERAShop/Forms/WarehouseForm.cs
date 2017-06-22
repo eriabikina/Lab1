@@ -194,25 +194,29 @@ namespace ERAShop {
                 }
 
                 Order foundOrder = order.FindLast (SearchByOrder);// find order that user wants to push to conveyor
+                try {
+                    if (foundOrder != null) {
+                        if (!conveyor.Contains (foundOrder.OrderId)) {//do not push already pushed orders
+                            conveyor.Enqueue (foundOrder.OrderId);
+                            richTextBox2.Text += foundOrder.OrderId.ToString () + Environment.NewLine;
+                            richTextBox1.Text = "Order pushed to conveyor";
 
-                if (foundOrder != null) {
-                    if (!conveyor.Contains (foundOrder.OrderId)) {//do not push already pushed orders
-                        conveyor.Enqueue (foundOrder.OrderId);
-                        richTextBox2.Text += foundOrder.OrderId.ToString () + Environment.NewLine;
-                        richTextBox1.Text = "Order pushed to conveyor";
-
-                        using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
-                            while (conveyor.Count > 0) {
-                                int fifo = conveyor.Dequeue ();
-                                stream.WriteLine (fifo.ToString ());
+                            using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
+                                while (conveyor.Count > 0) {
+                                    int fifo = conveyor.Dequeue ();
+                                    stream.WriteLine (fifo.ToString ());
+                                }
                             }
-                        }
 
+                        } else {
+                            richTextBox1.Text = "This order has been already pushed to conveyor";
+                        }
                     } else {
-                        richTextBox1.Text = "This order has been already pushed to conveyor";
+                        richTextBox1.Text = "No order found";
+                        throw new CustomException ();
                     }
-                } else {
-                    richTextBox1.Text = "No order found";
+                } catch (CustomException e) {
+                    e.NullReference ();
                 }
             }
         }
@@ -223,25 +227,29 @@ namespace ERAShop {
             List<int> ordersOnConveyor = ListOrdersOnConveyor ();
 
             Order foundOrder = order.FindLast (SearchByOrder);// find order that user wants to push to conveyor
+            try {
+                if (foundOrder != null) {
+                    if (ordersOnConveyor.Contains (foundOrder.OrderId)) {
+                        ordersOnConveyor.Remove (foundOrder.OrderId);
+                        richTextBox1.Text = "Order pulled from conveyor";
 
-            if (foundOrder != null) {
-                if (ordersOnConveyor.Contains (foundOrder.OrderId)) {
-                    ordersOnConveyor.Remove (foundOrder.OrderId);
-                    richTextBox1.Text = "Order pulled from conveyor";
-
-                    richTextBox2.Clear ();
-                    string path = ConveyorFilePath ();
-                    using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
-                        foreach (int item in ordersOnConveyor) {
-                            richTextBox2.Text += item.ToString () + Environment.NewLine;
-                            stream.WriteLine (item.ToString ());
+                        richTextBox2.Clear ();
+                        string path = ConveyorFilePath ();
+                        using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
+                            foreach (int item in ordersOnConveyor) {
+                                richTextBox2.Text += item.ToString () + Environment.NewLine;
+                                stream.WriteLine (item.ToString ());
+                            }
                         }
+                    } else {
+                        richTextBox1.Text = "This order has not been pushed to conveyor";
                     }
                 } else {
-                    richTextBox1.Text = "This order has not been pushed to conveyor";
+                    richTextBox1.Text = "No order found";
+                    throw new CustomException ();
                 }
-            } else {
-                richTextBox1.Text = "No order found";
+            } catch (CustomException e) {
+                e.NullReference ();
             }
 
         }

@@ -12,14 +12,9 @@ namespace ERAShop {
         static void Main (string[] args) {
 
             var users = new Dictionary<string, List<User>> ();
-            users.Add ("Admin", new List<User> () { new User { Name = "Vlad", Password = "boss111" } });
-
-            users.Add ("Partner", new List<User> () { new User { Name = "Olga", Password = "qwerty" } });
-            users["Partner"].Add(  new User { Name = "Ivan", Password = "123456"  });
-            users["Partner"].Add ( new User { Name = "James", Password = "password" } );
-            
-            users.Add ("WarehouseAdmin", new List<User> () { new User { Name = "Kim", Password = "kimkimkim" } });
-            users["WarehouseAdmin"].Add (new User () {  Name = "Oliver", Password = "oliver123"  });
+            users.Add ("Vlad", new List<User> () { new User { Name = "Vlad", Password = "boss111" } });
+            users.Add ("Olga", new List<User> () { new User { Name = "Olga", Password = "qwerty" } });
+            users.Add ("Ivan", new List<User> () { new User { Name = "Ivan", Password = "123456" } });
 
             string tryagain = "Y";
 
@@ -33,23 +28,45 @@ namespace ERAShop {
                 string pass = Console.ReadLine ();
 
                 foreach (var item in users) {
-                    foreach (var user in item.Value) {
-                        if (user.Name == name && user.Password == pass) {
-                            correct = true;
+                    if (item.Key == name) {
+                        foreach (var user in item.Value) {
+                            if (user.Password == pass) {
+                                correct = true;
+                            }
                         }
                     }
                 }
 
                 if (correct) {
-                    Console.WriteLine ("Correct credentials");
+
+                    var validUser = new Dictionary<string, List<User>> ();
+                    validUser.Add (name, new List<User> () { new User { Activity = DateTime.Now.ToString () + "  Logged in" } });
+
+                    Console.WriteLine ("Correct credentials\n");
+
+                    validUser[name].Add (new User () { Activity = DateTime.Now.ToString () + "  Opened Pay Money Sir Delivery application" });
+
                     Application.Run (new MenuForm ());
+
+                    validUser[name].Add (new User () { Activity = DateTime.Now.ToString () + "  Closed Pay Money Sir Delivery application" });
+
+                    validUser[name].Add (new User () { Activity = DateTime.Now.ToString () + "  Logged out" });
+
+                    Console.WriteLine ("***User log recorded:\n");
+
+                    foreach (var item in validUser) {
+                        foreach (var inItem in item.Value) {
+                            Console.WriteLine ("{0}", inItem.Activity);
+                        }
+                    }
+                    Console.ReadLine ();
                     tryagain = "N";
                 } else {
                     Console.WriteLine ("Wrong credentials");
                     Console.WriteLine ("Would you like to try again: Y/N?");
                     tryagain = Console.ReadLine ();
                 }
-            } while (string.Compare( tryagain, "Y",true)==0);
+            } while (string.Compare (tryagain, "Y", true) == 0);
 
         }
     }

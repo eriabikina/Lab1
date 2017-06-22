@@ -9,5 +9,8 @@ namespace ERAShop {
         public void CapacityOutOfLimit () {
             MessageBox.Show ("Conveyor capacity reached.Try to pull orders from conveyor to free space");
         }
+        public void NullReference () {
+            MessageBox.Show ("No value entered");
+        }
     }
 }
