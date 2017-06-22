@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERAShop {
     public interface IGeneralUser {
+
         void Login ();
         void LogOut ();
         void Register ();

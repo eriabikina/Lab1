@@ -46,7 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization.cs" />
+    <Compile Include="Forms\CustomException.cs" />
     <Compile Include="Forms\Order.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Users\Administrator.cs" />
     <Compile Include="Delivery\SantaClauseSledge.cs" />
     <Compile Include="Delivery\Drone.cs" />

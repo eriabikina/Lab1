@@ -79,6 +79,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.pullButton = new System.Windows.Forms.Button();
             this.Warehouse.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -532,6 +533,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.pullButton);
             this.groupBox2.Controls.Add(this.Push);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.textBox1);
@@ -578,6 +580,16 @@
             this.label10.Size = new System.Drawing.Size(81, 13);
             this.label10.TabIndex = 21;
             this.label10.Text = "Order Conveyor";
+            // 
+            // button1
+            // 
+            this.pullButton.Location = new System.Drawing.Point(144, 111);
+            this.pullButton.Name = "button1";
+            this.pullButton.Size = new System.Drawing.Size(137, 35);
+            this.pullButton.TabIndex = 16;
+            this.pullButton.Text = "Pull order from conveyor";
+            this.pullButton.UseVisualStyleBackColor = true;
+            this.pullButton.Click += new System.EventHandler(this.pullButton_Click);
             // 
             // WarehouseForm
             // 
@@ -676,5 +688,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button pullButton;
     }
 }

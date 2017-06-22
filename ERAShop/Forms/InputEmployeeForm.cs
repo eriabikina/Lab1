@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -36,7 +37,7 @@ namespace ERAShop {
         }
 
         public void WriteEmployeeDataToFile (string filePath) {
-
+            
             using (StreamWriter stream = new StreamWriter (filePath)) {
                 stream.WriteLine (employeeId.Text);
                 stream.WriteLine (firstName.Text);
@@ -56,7 +57,7 @@ namespace ERAShop {
         }
 
         private void createButton_Click (object sender, EventArgs e) {
-
+           
             try {
 
                 int.Parse (employeeId.Text);

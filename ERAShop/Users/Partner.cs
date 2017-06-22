@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ERAShop {
     public class Partner : IGeneralUser {
-        public void Login () { }
+
+        
+        public void Login () {
+            
+            
+        }
         public void LogOut () { }
         public void Register () { }
         public void ChangeData () { }

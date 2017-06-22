@@ -14,7 +14,8 @@ namespace ERAShop {
     public partial class WarehouseForm : Form {
 
         List<Order> order = new List<Order> { };
-        Queue<Order> conveyor = new Queue<Order> { };
+        Queue<int> conveyor = new Queue<int> { };
+
 
         public WarehouseForm () {
             InitializeComponent ();
@@ -38,12 +39,13 @@ namespace ERAShop {
             comboBox2.Items.AddRange (departments);
             comboBox3.Items.AddRange (sections);
 
+            string[] input;
             int count = Directory.GetFiles (@Environment.CurrentDirectory + "/Warehouse").Length;
 
             int a = 0, b = 0, c = 0, d = 0, e = 0;
             foreach (string path in Directory.GetFiles (@Environment.CurrentDirectory + "/Warehouse", "*.txt")) {
                 {
-                    string[] input = File.ReadAllLines (path);
+                    input = File.ReadAllLines (path);
 
                     order.Add (new Order {
                         OrderId = int.Parse (input[0]), ProductName = input[1], Producer = input[2], Department = input[6], Section = int.Parse (input[7]),
@@ -84,12 +86,12 @@ namespace ERAShop {
                             this.dataGridView5.Rows[e].Cells[int.Parse (input[7]) - 1].Value = "Order #" + input[0] + ": " + input[1] + " by " + input[8];
                             break;
                     }
-
-                    string conveyorPath = ConveyorFilePath ();
-                    richTextBox2.Text = File.ReadAllText (conveyorPath);
-
                 }
             }
+            string convPath = ConveyorFilePath ();
+            StreamWriter stream = new StreamWriter (convPath);
+            stream.Write ("");
+            stream.Close ();// start conveyor with a cleared file
         }
 
         private static string ConveyorFilePath () {
@@ -98,11 +100,10 @@ namespace ERAShop {
             if (!File.Exists (conveyorPath)) {
                 File.Create (conveyorPath);
             }
-
             return conveyorPath;
         }
 
-        private bool SearchOrdersByDepSec (Order order) {
+        private bool SearchByDepSec (Order order) {
 
             if (comboBox2.Text != "" && comboBox3.Text != "") {
                 if (order.Department == comboBox2.Text && order.Section == int.Parse (comboBox3.Text)) {
@@ -129,7 +130,7 @@ namespace ERAShop {
             }
         }
 
-        private bool SearchForOrder (Order order) {
+        private bool SearchByOrder (Order order) {
             if (textBox1.Text != "") {
                 if (order.OrderId == int.Parse (textBox1.Text)) {
                     return true;
@@ -144,7 +145,7 @@ namespace ERAShop {
         private void SearchOrdersByDepartmentSection () {
             richTextBox1.Clear ();
 
-            List<Order> results = order.FindAll (SearchOrdersByDepSec);
+            List<Order> results = order.FindAll (SearchByDepSec);
 
             if (results.Count != 0) {
 
@@ -164,7 +165,7 @@ namespace ERAShop {
 
             string message;
 
-            Order result = order.FindLast (SearchForOrder);
+            Order result = order.FindLast (SearchByOrder);
 
             if (result != null) {
                 Employee employee = new Employee ();
@@ -185,26 +186,92 @@ namespace ERAShop {
         private void PushOrderToConveyor () {
             richTextBox1.Clear ();
 
+            if (CheckConveyorCapacity ()) {
+                string path = ConveyorFilePath ();
 
-                Order result = order.FindLast (SearchForOrder);
+                foreach (string item in File.ReadAllLines (path)) {
+                    conveyor.Enqueue (int.Parse (item));// rebuild conveyor from user input
+                }
 
-                if (result != null) {
+                Order foundOrder = order.FindLast (SearchByOrder);// find order that user wants to push to conveyor
 
-                    conveyor.Enqueue (new Order { OrderId = result.OrderId });
+                if (foundOrder != null) {
+                    if (!conveyor.Contains (foundOrder.OrderId)) {//do not push already pushed orders
+                        conveyor.Enqueue (foundOrder.OrderId);
+                        richTextBox2.Text += foundOrder.OrderId.ToString () + Environment.NewLine;
+                        richTextBox1.Text = "Order pushed to conveyor";
 
-                    string path = ConveyorFilePath ();
-                    richTextBox1.Text = $"{conveyor.Count} order(s) pushed to conveyor";
+                        using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
+                            while (conveyor.Count > 0) {
+                                int fifo = conveyor.Dequeue ();
+                                stream.WriteLine (fifo.ToString ());
+                            }
+                        }
 
-                    var fifo = conveyor.Dequeue ();
-                    richTextBox2.Text += fifo.OrderId.ToString () + Environment.NewLine;
-
-                    using (StreamWriter stream = File.AppendText (path)) {
-                        stream.WriteLine (fifo.OrderId.ToString ());
+                    } else {
+                        richTextBox1.Text = "This order has been already pushed to conveyor";
                     }
-
                 } else {
                     richTextBox1.Text = "No order found";
                 }
+            }
+        }
+
+        private void PullOrderFromConveyor () {
+            richTextBox1.Clear ();
+
+            List<int> ordersOnConveyor = ListOrdersOnConveyor ();
+
+            Order foundOrder = order.FindLast (SearchByOrder);// find order that user wants to push to conveyor
+
+            if (foundOrder != null) {
+                if (ordersOnConveyor.Contains (foundOrder.OrderId)) {
+                    ordersOnConveyor.Remove (foundOrder.OrderId);
+                    richTextBox1.Text = "Order pulled from conveyor";
+
+                    richTextBox2.Clear ();
+                    string path = ConveyorFilePath ();
+                    using (StreamWriter stream = new StreamWriter (path)) {// write new conveyor queue to file
+                        foreach (int item in ordersOnConveyor) {
+                            richTextBox2.Text += item.ToString () + Environment.NewLine;
+                            stream.WriteLine (item.ToString ());
+                        }
+                    }
+                } else {
+                    richTextBox1.Text = "This order has not been pushed to conveyor";
+                }
+            } else {
+                richTextBox1.Text = "No order found";
+            }
+
+        }
+
+        private static List<int> ListOrdersOnConveyor () {
+            string convPath = ConveyorFilePath ();
+            List<int> ordersOnConveyor = new List<int> { };
+
+            foreach (string item in File.ReadAllLines (convPath)) {
+                ordersOnConveyor.Add (int.Parse (item));// rebuild conveyor list from user input that was saved in file
+            }
+
+            return ordersOnConveyor;
+        }
+
+        private bool CheckConveyorCapacity () {
+            List<int> ordersOnConveyor = ListOrdersOnConveyor ();
+
+            int capacity = 5;
+
+            try {
+                if (ordersOnConveyor.Count < capacity) {
+                    return true;
+                } else {
+                    throw new CustomException ();
+                }
+            } catch (CustomException e) {
+                e.CapacityOutOfLimit ();
+                return false;
+            }
         }
 
         private void srchButton_Click (object sender, EventArgs e) {
@@ -218,6 +285,9 @@ namespace ERAShop {
             PushOrderToConveyor ();
         }
 
+        private void pullButton_Click (object sender, EventArgs e) {
+            PullOrderFromConveyor ();
+        }
     }
 
 }
