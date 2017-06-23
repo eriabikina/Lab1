@@ -105,7 +105,6 @@ namespace ERAShop {
             string path = repository.BuildPath ("/Orders", storageId.Text);
 
             ReadOrderDataFromFile (path);
-
         }
 
         private void updateButton_Click (object sender, EventArgs e) {

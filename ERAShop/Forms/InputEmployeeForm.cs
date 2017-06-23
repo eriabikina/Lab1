@@ -11,7 +11,6 @@ namespace ERAShop {
 
             deliveryMethod.Items.AddRange (Enum.GetNames (typeof (Deliveries)));
         }
-
         public bool ValidateEmployeeFormInput () {
 
             var isValid = true;
@@ -92,7 +91,6 @@ namespace ERAShop {
 
             ReadEmloyeeDataFromFile (path);
         }
-
         private void updateButton_Click (object sender, EventArgs e) {
             try {
 
@@ -139,7 +137,5 @@ namespace ERAShop {
             }
         }
     }
-
-
 }
 

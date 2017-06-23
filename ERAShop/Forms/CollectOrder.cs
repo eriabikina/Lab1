@@ -47,7 +47,6 @@ namespace ERAShop {
             }
         }
 
-
         public void ShowOrderStaticData (string filePath) {
             if (filePath != null || filePath != string.Empty) {
                 if (File.Exists (filePath)) {
@@ -118,7 +117,6 @@ namespace ERAShop {
                 FindOrdersToDeliver (path);
             }
         }
-
         private void orderId_TextChanged (object sender, EventArgs e) {
             storageProductName.Clear ();
             producer.Clear ();
@@ -139,7 +137,6 @@ namespace ERAShop {
             string pathTo = repository.BuildPath ("Warehouse", orderId.Text);
 
             CollectOrderSaveToFile (pathFrom, pathTo);
-
         }
     }
 }

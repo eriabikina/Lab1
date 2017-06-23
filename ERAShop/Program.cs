@@ -61,6 +61,7 @@ namespace ERAShop {
                     }
                     Console.ReadLine ();
                     tryagain = "N";
+
                 } else {
                     Console.WriteLine ("Wrong credentials");
                     Console.WriteLine ("Would you like to try again: Y/N?");
