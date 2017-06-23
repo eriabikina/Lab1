@@ -13,7 +13,7 @@ namespace ERAShop {
         }
 
         public int Cost (int distance, int quantity, int costPerKg) {
-            return Tax * distance + quantity * costPerKg;
+            return Tax * quantity * costPerKg;
         }
     }
 }

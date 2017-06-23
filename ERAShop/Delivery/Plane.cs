@@ -11,10 +11,12 @@ namespace ERAShop {
         public static int maxDistance = 5000;
 
         public override string Description () {
-            string how = base.Description ();
-            how += "by air";
+            StringBuilder sb = new StringBuilder ();
 
-            return how;
+            string how = base.Description ();
+            sb.Append (how).Append ("by air");
+
+            return sb.ToString ();
 
         }
     }

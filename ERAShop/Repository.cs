@@ -9,13 +9,15 @@ namespace ERAShop {
     public class Repository {
 
         public string BuildPath (string folderName, string fileName) {
+            StringBuilder sb = new StringBuilder ();
+
             string path = Environment.CurrentDirectory + "/" + folderName;
             if (!Directory.Exists (path)) {
                 Directory.CreateDirectory (path);
             }
-            path += "/" + $"{fileName}.txt";
+            sb.Append (path).Append ($"/{ fileName}.txt");
 
-            return path;
+            return sb.ToString();
         }
 
     }

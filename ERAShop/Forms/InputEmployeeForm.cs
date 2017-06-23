@@ -17,7 +17,7 @@ namespace ERAShop {
             var isValid = true;
             string message = "";
 
-            if (!Regex.IsMatch (firstName.Text, @"^[a-zA-Z]+$") || Regex.IsMatch (lastName.Text, @"^[a-zA-Z]+$")) {
+            if (!Regex.IsMatch (firstName.Text, @"^[a-zA-Z]+$") && Regex.IsMatch (lastName.Text, @"^[a-zA-Z]+$")) {
                 message += "Employee name must consist of alphabet letters only\n";
                 isValid = false;
             }
@@ -48,11 +48,13 @@ namespace ERAShop {
 
         public void ReadEmloyeeDataFromFile (string filePath) {
             if (filePath != null || filePath != string.Empty) {
-                var lines = File.ReadAllLines (filePath);
-                employeeId.Text = lines[0];
-                firstName.Text = lines[1];
-                lastName.Text = lines[2];
-                deliveryMethod.Text = lines[3];
+                if (File.Exists (filePath)) {
+                    var lines = File.ReadAllLines (filePath);
+                    employeeId.Text = lines[0];
+                    firstName.Text = lines[1];
+                    lastName.Text = lines[2];
+                    deliveryMethod.Text = lines[3];
+                }
             }
         }
 
@@ -84,8 +86,6 @@ namespace ERAShop {
         }
 
         private void readButton_Click (object sender, EventArgs e) {
-
-            createButton.Enabled = false;
 
             Repository repository = new Repository ();
             string path = repository.BuildPath ("/Employees", employeeId.Text);
@@ -135,7 +135,6 @@ namespace ERAShop {
                     deliveryMethod.ResetText ();
 
                     MessageBox.Show ("Existing data has been deleted");
-                    createButton.Enabled = true;
                 }
             }
         }

@@ -101,8 +101,6 @@ namespace ERAShop {
 
         private void readButton_Click (object sender, EventArgs e) {
 
-            createButton.Enabled = false;
-
             Repository repository = new Repository ();
             string path = repository.BuildPath ("/Orders", storageId.Text);
 
@@ -154,7 +152,6 @@ namespace ERAShop {
                     storageRoute.ResetText ();
 
                     MessageBox.Show ("Existing data has been deleted");
-                    createButton.Enabled = true;
                 }
             }
         }

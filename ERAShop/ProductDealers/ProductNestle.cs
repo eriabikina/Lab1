@@ -10,10 +10,10 @@ namespace ERAShop {
 
         public ProductNestle () {
             Tax = 2;
-        }
+                    }
 
         public int Cost (int distance, int quantity, int costPerKg) {
-            return Tax * distance + quantity * costPerKg;
+            return Tax * distance + quantity * costPerKg ;
         }
     }
 }

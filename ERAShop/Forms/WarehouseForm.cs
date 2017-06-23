@@ -163,6 +163,7 @@ namespace ERAShop {
         private void GenerateReportForOrder () {
             richTextBox1.Clear ();
 
+            StringBuilder sb = new StringBuilder ();
             string message;
 
             Order result = order.FindLast (SearchByOrder);
@@ -171,11 +172,12 @@ namespace ERAShop {
                 Employee employee = new Employee ();
 
                 employee.deliveryMethod = (Deliveries)(Enum.Parse (typeof (Deliveries), result.DeliveryMethod));
-                message = $"Hi! My name is {result.FullName}\n";
-                message += $"{employee.DeliveryMethod}\n";
+                sb.Append( $"Hi! My name is {result.FullName}\n");
+                sb.Append ($"{employee.DeliveryMethod}\n");
 
-                message += $"Today's pick up location is {result.Department} department: section #{result.Section}\n";
-                message += $"Current order is for {result.Producer} and costs {result.Cost:C} \n";
+                sb.Append ($"Today's pick up location is {result.Department} department: section #{result.Section}\n");
+                sb.Append ($"Current order is for {result.Producer} and costs {result.Cost:C} \n");
+                message = sb.ToString ();
 
             } else {
                 message = "No order found";

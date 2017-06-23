@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERAShop {
     public class Employee {
+        StringBuilder sb = new StringBuilder ();
 
         private string lastName;
 
@@ -32,23 +33,28 @@ namespace ERAShop {
                 switch (deliveryMethod) {
                     case Deliveries.Cargo:
                         CargoShip cargo = new CargoShip ();
-                        greetings = "I am a Captain" + Environment.NewLine + "My job is " + cargo.Description ();
+                        sb.Append ("My job is ").Append (cargo.Description ());
+                        greetings = "I am a Captain"+Environment.NewLine + sb.ToString();
                         break;
                     case Deliveries.Plane:
                         Plane plane = new Plane ();
-                        greetings = "I am a Pilot" + Environment.NewLine + "My job is " + plane.Description ();
+                        sb.Append ("My job is ").Append (plane.Description ());
+                        greetings = "I am a Pilot" + Environment.NewLine + sb.ToString ();
                         break;
                     case Deliveries.Truck:
                         Truck truck = new Truck ();
-                        greetings = "I am a Driver" + Environment.NewLine + "My job is " + truck.Description ();
+                        sb.Append ("My job is ").Append (truck.Description ());
+                        greetings = "I am a Driver" + Environment.NewLine + sb.ToString ();
                         break;
                     case Deliveries.Drone:
                         Drone drone = new Drone ();
-                        greetings = "I am a Drone operator" + Environment.NewLine + "My job is " + drone.Description ();
+                        sb.Append ("My job is ").Append (drone.Description ());
+                        greetings = "I am a Drone operator" + Environment.NewLine + sb.ToString ();
                         break;
                     default:
                         SantaClausSledge santaClause = new SantaClausSledge ();
-                        greetings = "I am Santa" + Environment.NewLine + "My job is " + santaClause.Description ();
+                        sb.Append ("My job is ").Append (santaClause.Description ());
+                        greetings = "I am Santa" + Environment.NewLine + sb.ToString ();
                         break;
                 }
                 return greetings;

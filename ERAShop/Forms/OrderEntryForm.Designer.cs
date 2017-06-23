@@ -119,7 +119,7 @@ namespace ERAShop {
             this.createButton.TabIndex = 8;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = true;
-            this.createButton.Click += new EventHandler (this.createButton_Click);
+            this.createButton.Click += new System.EventHandler(this.createButton_Click);
             // 
             // readButton
             // 
@@ -129,7 +129,7 @@ namespace ERAShop {
             this.readButton.TabIndex = 9;
             this.readButton.Text = "Read";
             this.readButton.UseVisualStyleBackColor = true;
-            this.readButton.Click += new EventHandler (this.readButton_Click);
+            this.readButton.Click += new System.EventHandler(this.readButton_Click);
             // 
             // updateButton
             // 
@@ -139,7 +139,7 @@ namespace ERAShop {
             this.updateButton.TabIndex = 10;
             this.updateButton.Text = "Update";
             this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Click += new EventHandler (this.updateButton_Click);
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
             // deleteButton
             // 
@@ -149,7 +149,7 @@ namespace ERAShop {
             this.deleteButton.TabIndex = 11;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
-            this.deleteButton.Click += new EventHandler (this.deleteButton_Click);
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // storageId
             // 
@@ -167,10 +167,10 @@ namespace ERAShop {
             this.label5.TabIndex = 13;
             this.label5.Text = "Order Id";
             // 
-            // textBox5
+            // quantity
             // 
             this.quantity.Location = new System.Drawing.Point(158, 180);
-            this.quantity.Name = "textBox5";
+            this.quantity.Name = "quantity";
             this.quantity.Size = new System.Drawing.Size(91, 20);
             this.quantity.TabIndex = 23;
             // 
@@ -205,7 +205,7 @@ namespace ERAShop {
             this.Controls.Add(this.storageProducer);
             this.Controls.Add(this.storageProductName);
             this.Name = "OrderEntryForm";
-            this.Text = "Oder Entry Form";
+            this.Text = "Order";
             this.ResumeLayout(false);
             this.PerformLayout();
 

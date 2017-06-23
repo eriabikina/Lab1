@@ -12,10 +12,12 @@ namespace ERAShop {
 
         public string how;
         public override string Description () {
-            how = base.Description ();
-            how += "by magic";
+            StringBuilder sb = new StringBuilder ();
 
-            return how;
+            how = base.Description ();
+            sb.Append (how).Append ("by magic");
+
+            return sb.ToString ();
 
         }
     }

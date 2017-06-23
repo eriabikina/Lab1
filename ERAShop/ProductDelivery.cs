@@ -41,6 +41,5 @@ namespace ERAShop {
         public ProductDealers producer;
         public Deliveries delivery;
 
-
     }
 }
